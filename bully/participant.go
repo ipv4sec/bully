@@ -1,6 +1,7 @@
 package bully
 
 import (
+	"errors"
 	"log"
 	"net"
 	"sync"
@@ -66,7 +67,9 @@ func NewParticipant(UDPAddrString, interfaceName string, rank uint64, tag string
 			}
 		}
 	}
-
+	if sourceIP == nil {
+		return nil, errors.New("missing source IP")
+	}
 	p := &Participant{
 		IP:        sourceIP,
 		Rank:      rank,
