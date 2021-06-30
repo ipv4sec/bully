@@ -26,7 +26,7 @@ type Participant struct {
 
 	Master Node
 	Status Status
-	Callback func(string)
+	Callback func(string, string, uint64)
 }
 
 type Status int
@@ -40,7 +40,7 @@ type Node struct {
 	Addr string
 }
 
-func NewParticipant(UDPAddrString, interfaceName string, rank uint64, tag string, callback func(string)) (*Participant, error) {
+func NewParticipant(UDPAddrString, interfaceName string, rank uint64, tag string, callback func(string, string, uint64)) (*Participant, error) {
 	UDPAddr, err := net.ResolveUDPAddr("udp", UDPAddrString)
 	if err != nil {
 		return nil, err
@@ -137,7 +137,7 @@ func (p *Participant) Run(done chan interface{}) {
 				p.Status = SlaveStatus
 			}
 			p.Master = v
-			p.Callback(v.Addr)
+			p.Callback(p.IP.String(), v.Addr, v.Rank)
 		}
 	}()
 
